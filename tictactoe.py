@@ -1,3 +1,4 @@
+from ntpath import sep
 def define_boardsize():
     while True:
         board_size = int(input("Enter board size n for n x n board (3-10): "))
@@ -36,23 +37,34 @@ def define_dict(board_size):
     return temp_dict
 
 def create_board(dict_board, size):
-    print(("+" + "-" * 7) * size , end="+\n")
-    for number in range(1, len(dict_board) + 1):
-        front_spacing, back_spacing = 3, 3
+    seperator = 7
 
-        if not str(dict_board[number]).isnumeric():
-            front_spacing = 3
-            back_spacing = 3
-        elif dict_board[number] > 9 and dict_board[number] <= 99 :
-            front_spacing = 2
-            back_spacing = 3
-        elif dict_board[number] > 99:
-            front_spacing = 2
-            back_spacing = 2
+    if size == 3:
+        seperator = 3
+
+    print(("+" + "-" * seperator) * size , end="+\n")
+    for number in range(1, len(dict_board) + 1):
+        front_spacing, back_spacing, seperator = 3, 3, 7
+
+        if size != 3:
+            if not str(dict_board[number]).isnumeric():
+                front_spacing = 3
+                back_spacing = 3
+            elif dict_board[number] > 9 and dict_board[number] <= 99 :
+                front_spacing = 2
+                back_spacing = 3
+            elif dict_board[number] > 99:
+                front_spacing = 2
+                back_spacing = 2
+
+        else:
+            front_spacing = 1
+            back_spacing = 1
+            seperator = 3
 
         if number % size == 0:
             print(f"|{' ' * front_spacing}{dict_board[number]}{' ' * back_spacing}|")
-            print(("+" + "-" * 7) * size , end="+\n")
+            print(("+" + "-" * seperator) * size , end="+\n")
         else:
             print(f"|{' ' * front_spacing}{dict_board[number]}{' ' * back_spacing}", end="")
 
