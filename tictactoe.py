@@ -8,9 +8,10 @@ def define_boardsize():
 
 def define_usersymbol():
     temp_symbol = []
+    text_holder = ""
     current_order = 1
     while True:
-        user_symbol = input(f"Enter Player {current_order}'s symbol (a single letter): ")
+        user_symbol = input(f"Enter Player {current_order}'s symbol (a single letter{text_holder}): ")
         if len(user_symbol) > 1:
             print("Invalid Symbol length try again")
             continue
@@ -20,6 +21,7 @@ def define_usersymbol():
             continue
 
         temp_symbol.append(user_symbol)
+        text_holder = f", different from '{user_symbol}'"
         current_order += 1
 
         if len(temp_symbol) >= 2:
@@ -36,14 +38,16 @@ def define_dict(board_size):
 def create_board(dict_board, size):
     print(("+" + "-" * 7) * size , end="+\n")
     for number in range(1, len(dict_board) + 1):
-        back_spacing = 3
-        front_spacing = 3
+        front_spacing, back_spacing = 3, 3
 
-        if number > 9:
+        if not str(dict_board[number]).isnumeric():
+            front_spacing = 3
+            back_spacing = 3
+        elif dict_board[number] > 9 and dict_board[number] <= 99 :
             front_spacing = 2
             back_spacing = 3
-
-        if number > 99:
+        elif dict_board[number] > 99:
+            front_spacing = 2
             back_spacing = 2
 
         if number % size == 0:
@@ -83,23 +87,28 @@ def check_win_condition(dict_board, board_size, dict_size):
 
     for chunk in horizontal_list:
         if len(set(chunk)) == 1:
-            print(f"{chunk[0]} won horizontally!")
+            create_board(player_dict_board, player_board_size)
+            print(f"Player {chunk[0]} Won!")
             return True
 
     for chunk in vertical_list:
         if len(set(chunk)) == 1:
-            print(f"{chunk[0]} won vertically!")
+            create_board(player_dict_board, player_board_size)
+            print(f"Player {chunk[0]} Won!")
             return True
 
     if len(set(leftright_digagonal)) == 1:
-        print(f"{leftright_digagonal[0]} won diagonally!")
+        create_board(player_dict_board, player_board_size)
+        print(f"Player {leftright_digagonal[0]} Won!")
         return True
 
     if len(set(rightleft_diagonal)) == 1:
-        print(f"{rightleft_diagonal[0]} won diagonally!")
+        create_board(player_dict_board, player_board_size)
+        print(f"Player {rightleft_diagonal[0]} Won!")
         return True
 
     if not any(item in list(range(1, dict_size)) for item in set(values)):
+        create_board(player_dict_board, player_board_size)
         print("All sloth have been taken so no one won!")
         return True
 
@@ -117,7 +126,6 @@ while True:
     player_dict_board = user_decision(player_dict_board, currentUser, player_board_size)
 
     if check_win_condition(player_dict_board, player_board_size, PLAYER_DICT_SIZE):
-        create_board(player_dict_board, player_board_size)
         break
 
     if currentUser == userOneSymbol:
